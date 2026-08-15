@@ -1,1 +1,993 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Galolingo — Fixação de Vocabulário em Francês</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green: #58CC02;
+    --green-dark: #46A302;
+    --blue: #1CB0F6;
+    --blue-dark: #1899D6;
+    --gold: #FFC800;
+    --gold-dark: #E6B400;
+    --red: #FF4B4B;
+    --red-dark: #EA2B2B;
+    --text: #3C3C3C;
+    --text-light: #6b7280;
+    --bg: #F7F9FA;
+    --card: #FFFFFF;
+    --border: #E5E5E5;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+  }
 
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+  }
+
+  h1,h2{ font-family:'Baloo 2', sans-serif; margin:0; }
+
+  #page{
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    display:flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(0,0,0,0.06);
+  }
+
+  /* ---------- TOPBAR ---------- */
+  #topbar{
+    position: sticky;
+    top:0;
+    z-index: 10;
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    padding: 10px 16px 12px;
+  }
+  .topbar-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .level-label{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+  .score-badge{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    background: #FFF8E1;
+    color:#B8860B;
+    border: 2px solid var(--gold);
+    border-radius: 999px;
+    padding: 4px 12px;
+    white-space: nowrap;
+    flex-shrink:0;
+  }
+  .score-max{ font-weight:600; opacity:.7; font-size:12px; }
+  .progress-track{
+    background: #E5E5E5;
+    border-radius: 999px;
+    height: 12px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--green), #7ED321);
+    border-radius: 999px;
+    transition: width .4s ease;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  main#content{
+    flex:1;
+    padding: 20px 16px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .btn{
+    font-family:'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 16px;
+    padding: 15px 20px;
+    cursor: pointer;
+    color: #fff;
+    background: var(--green);
+    box-shadow: 0 4px 0 var(--green-dark);
+    transition: transform .05s ease, box-shadow .05s ease, opacity .2s ease;
+  }
+  .btn:active:not(:disabled){ transform: translateY(4px); box-shadow: 0 0 0 var(--green-dark); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-block{ width:100%; margin-top:auto; position: sticky; bottom: 16px; }
+
+  .footer-space{ flex:1; }
+
+  /* ---------- HOME / GALO / FINAL ---------- */
+  .home-card{
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 22px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    animation: popIn .35s ease;
+  }
+  .mascot{ font-size: 56px; line-height:1; margin-bottom:4px; }
+  .home-card h1{ font-size: 24px; color: var(--text); }
+  .home-sub{ font-size:15px; color: var(--text-light); margin:0; line-height:1.5; }
+  .rule-list{ width:100%; display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .rule-item{
+    display:flex; align-items:center; gap:10px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-weight:700;
+    font-size:14px;
+    text-align:left;
+  }
+  .rule-icon{ font-size:20px; flex-shrink:0; }
+
+  .final-score{
+    font-family:'Baloo 2', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin: 4px 0;
+  }
+  .final-score span{ font-size:18px; color: var(--text-light); font-weight:700; }
+  .breakdown{ width:100%; margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .breakdown-row{
+    display:flex; justify-content:space-between;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-weight:700;
+    font-size:14px;
+  }
+
+  /* ---------- QUESTION / PARAGRAPH CARD ---------- */
+  .question-card{
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    animation: popIn .3s ease;
+  }
+  .para-title{
+    font-family:'Baloo 2', sans-serif;
+    font-size: 15px;
+    font-weight:700;
+    color: var(--text);
+    margin: 0 0 14px;
+    line-height:1.4;
+  }
+  .title-sep{ opacity:.35; margin:0 5px; }
+
+  /* ---------- HEARTS ---------- */
+  .hearts-row{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-bottom:12px; }
+  .heart{ font-size:22px; line-height:1; }
+  .heart-empty{
+    width:20px; height:20px;
+    border-radius:50%;
+    background:#E2E2E2;
+    display:inline-block;
+    border: 2px solid #D2D2D2;
+  }
+  .blocked-msg{
+    font-size:13px;
+    color: var(--red-dark);
+    background: #FFF3F3;
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    margin: 0 0 14px;
+    font-weight:700;
+    line-height:1.4;
+  }
+
+  /* ---------- TEXTO EM FRANCÊS ---------- */
+  .frtext{
+    position:relative;
+    font-family:'Baloo 2', sans-serif;
+    font-size: 19px;
+    font-weight:600;
+    line-height: 2.3;
+    color: var(--text);
+  }
+  .w-word{
+    cursor:pointer;
+    border-bottom: 3px dashed var(--blue);
+    border-radius:4px;
+    padding: 1px 2px;
+    transition: background .12s ease, opacity .12s ease;
+  }
+  .w-word:hover{ background:#EFF8FF; }
+  .frtext.blocked .w-word{
+    opacity:.4;
+    cursor:not-allowed;
+    border-bottom-color:#CCC;
+  }
+  .w-partitive{
+    font-weight:800;
+    color: var(--green-dark);
+  }
+  .w-underline{
+    cursor:pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
+    border-radius:4px;
+    padding: 1px 2px;
+    transition: background .12s ease;
+  }
+  .w-underline:hover{ background:#FFF8E1; }
+
+  /* ---------- POPUP DE TRADUÇÃO ---------- */
+  .popup-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: transparent;
+  }
+  .popup{
+    position:absolute;
+    z-index: 30;
+    background: #fff;
+    border: 2px solid var(--blue);
+    border-radius: 14px;
+    padding: 12px 14px;
+    min-width: 170px;
+    max-width: 250px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.16);
+    animation: popIn .15s ease;
+  }
+  .popup-word{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size: 15px;
+    color: var(--blue-dark);
+    margin-bottom: 4px;
+  }
+  .popup-trans{
+    font-weight:700;
+    font-size: 15px;
+    color: var(--text);
+    line-height:1.35;
+  }
+  .popup-inf{
+    margin-top:7px;
+    font-size: 12.5px;
+    color: var(--text-light);
+    border-top: 1px dashed var(--border);
+    padding-top: 7px;
+    line-height:1.4;
+  }
+  .popup-free{
+    margin-top:7px;
+    font-size: 11px;
+    font-weight:800;
+    letter-spacing:.3px;
+    text-transform:uppercase;
+    color: var(--gold-dark);
+  }
+
+  /* ---------- GALO MODAL (usa mesmo estilo de home-card) ---------- */
+  .galo-hearts{
+    font-family:'Baloo 2', sans-serif;
+    font-size: 32px;
+    font-weight:800;
+    color: var(--gold-dark);
+    margin: 2px 0;
+  }
+
+  @keyframes popIn{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="page">
+  <div id="topbar"></div>
+  <main id="content"></main>
+</div>
+
+<script>
+/* =========================================================
+   SONOPLASTIA
+   Os arquivos abaixo devem estar na mesma pasta deste HTML.
+   ========================================================= */
+const SOUND_FILES = {
+  click: 'click.mp3',
+  ok: 'ok.mp3',
+  falha: 'falha.mp3',
+  level: 'level.mp3',
+  levelfail: 'levelfail.mp3',
+  win: 'win01.mp3',
+  losing: 'losing.mp3'
+};
+function playSound(name){
+  try{
+    const src = SOUND_FILES[name];
+    if(!src) return;
+    const audio = new Audio(src);
+    audio.play().catch(()=>{ /* som indisponível ou bloqueado pelo navegador */ });
+  }catch(e){ /* ignora se áudio não puder ser criado */ }
+}
+
+/* =========================================================
+   DADOS DOS 10 PARÁGRAFOS
+   Tipos de token:
+   - "w" (padrão, omitido): palavra comum -> custa 1 coração, abre pop-up
+   - "p": artigo partitivo (du / de la / de l' / des) -> NEGRITO, sem clique, sem custo
+   - "u": vocabulário de fruta/verdura/legume sublinhado -> abre pop-up, SEM custo (dica grátis)
+   pu = pontuação a colar logo após a palavra (",", ".", etc.)
+   ns = true quando NÃO deve haver espaço depois deste token (elisão: j', d', l', de l')
+   tr = tradução (contextualizada, formato "opção1 / opção2")
+   inf = { f: infinitivo em francês, p: infinitivo em português } — apenas para verbos conjugados
+   ========================================================= */
+
+const paragraphs = [
+{
+  titleFr: "À la cantine de l'école",
+  titlePt: "Na cantina da escola",
+  tokens: [
+    { t:"À", tr:"a / em" },
+    { t:"la", tr:"a" },
+    { t:"cantine", pu:",", tr:"cantina / refeitório" },
+    { t:"Lucas", tr:"Lucas" },
+    { t:"mange", tr:"come", inf:{f:"manger",p:"comer"} },
+    { t:"avec", tr:"com" },
+    { t:"son", tr:"seu / dele" },
+    { t:"ami", pu:".", tr:"amigo" },
+    { t:"Dans", tr:"em / dentro de" },
+    { t:"son", tr:"seu / dele" },
+    { t:"assiette", pu:",", tr:"prato" },
+    { t:"il", tr:"ele" },
+    { t:"met", tr:"coloca / põe", inf:{f:"mettre",p:"colocar, pôr"} },
+    { t:"du", ty:"p" },
+    { t:"brocoli", pu:",", tr:"brócolis" },
+    { t:"de la", ty:"p" },
+    { t:"carotte", ty:"u", tr:"cenoura" },
+    { t:"avec", tr:"com" },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"ail", pu:",", tr:"alho" },
+    { t:"et", tr:"e" },
+    { t:"des", ty:"p" },
+    { t:"petits pois", pu:".", tr:"ervilhas" },
+    { t:"Puis", pu:",", tr:"depois / em seguida" },
+    { t:"il", tr:"ele" },
+    { t:"va", tr:"vai", inf:{f:"aller",p:"ir"} },
+    { t:"dans", tr:"em" },
+    { t:"la", tr:"a" },
+    { t:"salle", tr:"sala" },
+    { t:"de", tr:"de" },
+    { t:"classe", pu:".", tr:"aula" }
+  ]
+},
+{
+  titleFr: "La cuisine en famille",
+  titlePt: "A cozinha em família",
+  tokens: [
+    { t:"Dans", tr:"dentro de / em" },
+    { t:"la", tr:"a" },
+    { t:"cuisine", pu:",", tr:"cozinha" },
+    { t:"maman", tr:"mamãe" },
+    { t:"prépare", tr:"prepara", inf:{f:"préparer",p:"preparar"} },
+    { t:"le", tr:"o" },
+    { t:"repas", pu:".", tr:"refeição / comida" },
+    { t:"Elle", tr:"ela" },
+    { t:"coupe", tr:"corta", inf:{f:"couper",p:"cortar"} },
+    { t:"du", ty:"p" },
+    { t:"persil", tr:"salsinha" },
+    { t:"et", tr:"e" },
+    { t:"de la", ty:"p" },
+    { t:"tomate", ty:"u", pu:".", tr:"tomate" },
+    { t:"Mon", tr:"meu" },
+    { t:"frère", tr:"irmão" },
+    { t:"ajoute", tr:"adiciona / acrescenta", inf:{f:"ajouter",p:"adicionar, acrescentar"} },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"oignon", tr:"cebola" },
+    { t:"et", tr:"e" },
+    { t:"des", ty:"p" },
+    { t:"pommes de terre", tr:"batatas" },
+    { t:"pour", tr:"para" },
+    { t:"la", tr:"a" },
+    { t:"famille", pu:".", tr:"família" }
+  ]
+},
+{
+  titleFr: "Le petit-déjeuner du matin",
+  titlePt: "O café da manhã",
+  tokens: [
+    { t:"Le", tr:"o / de" },
+    { t:"matin", pu:",", tr:"manhã" },
+    { t:"j'", ns:true, tr:"eu (abreviado)" },
+    { t:"adore", tr:"adoro", inf:{f:"adorer",p:"adorar"} },
+    { t:"le", tr:"o" },
+    { t:"petit-déjeuner", pu:".", tr:"café da manhã" },
+    { t:"Je", tr:"eu" },
+    { t:"bois", tr:"bebo", inf:{f:"boire",p:"beber"} },
+    { t:"du", ty:"p" },
+    { t:"jus", tr:"suco" },
+    { t:"d'", ns:true, tr:"de (abreviado)" },
+    { t:"orange", tr:"laranja" },
+    { t:"et", tr:"e" },
+    { t:"je", tr:"eu" },
+    { t:"mange", tr:"como", inf:{f:"manger",p:"comer"} },
+    { t:"de la", ty:"p" },
+    { t:"papaye", ty:"u", pu:".", tr:"mamão" },
+    { t:"Ma", tr:"minha" },
+    { t:"sœur", tr:"irmã" },
+    { t:"préfère", tr:"prefere", inf:{f:"préférer",p:"preferir"} },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"ananas", tr:"abacaxi" },
+    { t:"et", tr:"e" },
+    { t:"des", ty:"p" },
+    { t:"fraises", tr:"morangos" },
+    { t:"magnifiques", pu:".", tr:"magníficos" }
+  ]
+},
+{
+  titleFr: "Un pique-nique à la plage",
+  titlePt: "Um piquenique na praia",
+  tokens: [
+    { t:"Pendant", tr:"durante" },
+    { t:"l'", ns:true, tr:"o (abreviado)" },
+    { t:"été", pu:",", tr:"verão" },
+    { t:"nous", tr:"nós" },
+    { t:"allons", tr:"vamos", inf:{f:"aller",p:"ir"} },
+    { t:"à", tr:"à / para" },
+    { t:"la", tr:"a" },
+    { t:"plage", pu:".", tr:"praia" },
+    { t:"Sous", tr:"sob / debaixo de" },
+    { t:"le", tr:"o" },
+    { t:"soleil", pu:",", tr:"sol" },
+    { t:"nous", tr:"nós" },
+    { t:"mangeons", tr:"comemos", inf:{f:"manger",p:"comer"} },
+    { t:"du", ty:"p" },
+    { t:"citron", pu:",", tr:"limão" },
+    { t:"de la", ty:"p" },
+    { t:"pastèque", ty:"u", pu:",", tr:"melancia" },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"orange", tr:"laranja" },
+    { t:"et", tr:"e" },
+    { t:"des", ty:"p" },
+    { t:"raisins", tr:"uvas" },
+    { t:"très", tr:"muito" },
+    { t:"doux", tr:"doces / suaves" },
+    { t:"avec", tr:"com" },
+    { t:"nos", tr:"nos / nossos(as)" },
+    { t:"cousins", pu:".", tr:"primos" }
+  ]
+},
+{
+  titleFr: "Le village du grand-père",
+  titlePt: "O vilarejo do vovô",
+  tokens: [
+    { t:"Mon", tr:"meu" },
+    { t:"grand-père", tr:"avô" },
+    { t:"habite", tr:"mora / habita", inf:{f:"habiter",p:"morar, habitar"} },
+    { t:"dans", tr:"em / dentro de" },
+    { t:"un", tr:"um" },
+    { t:"beau", tr:"belo / bonito" },
+    { t:"village", pu:".", tr:"vilarejo / vila" },
+    { t:"Il", tr:"ele" },
+    { t:"achète", tr:"compra", inf:{f:"acheter",p:"comprar"} },
+    { t:"du", ty:"p" },
+    { t:"chou vert", tr:"couve / couve-verde" },
+    { t:"et", tr:"e" },
+    { t:"de la", ty:"p" },
+    { t:"laitue", ty:"u", pu:".", tr:"alface" },
+    { t:"Ma", tr:"minha" },
+    { t:"grand-mère", tr:"avó" },
+    { t:"ajoute", tr:"adiciona / acrescenta", inf:{f:"ajouter",p:"adicionar, acrescentar"} },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"ail", tr:"alho" },
+    { t:"et", tr:"e" },
+    { t:"des", ty:"p" },
+    { t:"carottes", tr:"cenouras" },
+    { t:"pour", tr:"para" },
+    { t:"la", tr:"a" },
+    { t:"soupe", pu:".", tr:"sopa" }
+  ]
+},
+{
+  titleFr: "Le goûter de l'après-midi",
+  titlePt: "O lanche da tarde",
+  tokens: [
+    { t:"L'", ns:true, tr:"a (abreviado)" },
+    { t:"après-midi", pu:",", tr:"tarde" },
+    { t:"Sophie", tr:"Sophie" },
+    { t:"est", tr:"está / é", inf:{f:"être",p:"estar, ser"} },
+    { t:"chez", tr:"na casa de / em" },
+    { t:"son", tr:"seu / dele" },
+    { t:"amie", pu:".", tr:"amiga" },
+    { t:"Elles", tr:"elas" },
+    { t:"coupent", tr:"cortam", inf:{f:"couper",p:"cortar"} },
+    { t:"du", ty:"p" },
+    { t:"raisin", pu:",", tr:"uva" },
+    { t:"de la", ty:"p" },
+    { t:"banane", ty:"u", pu:",", tr:"banana" },
+    { t:"goûtent", tr:"provam / degustam", inf:{f:"goûter",p:"provar, degustar"} },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"ananas", tr:"abacaxi" },
+    { t:"et", tr:"e" },
+    { t:"mangent", tr:"comem", inf:{f:"manger",p:"comer"} },
+    { t:"des", ty:"p" },
+    { t:"pêches", tr:"pêssegos" },
+    { t:"ensemble", pu:".", tr:"juntas / juntos" }
+  ]
+},
+{
+  titleFr: "La soupe du soir",
+  titlePt: "A sopa da noite",
+  tokens: [
+    { t:"Le", tr:"o / de" },
+    { t:"soir", pu:",", tr:"noite" },
+    { t:"mon", tr:"meu" },
+    { t:"père", tr:"pai" },
+    { t:"prépare", tr:"prepara", inf:{f:"préparer",p:"preparar"} },
+    { t:"une", tr:"uma" },
+    { t:"grande", tr:"grande" },
+    { t:"soupe", pu:".", tr:"sopa" },
+    { t:"Il", tr:"ele" },
+    { t:"utilise", tr:"usa / utiliza", inf:{f:"utiliser",p:"usar, utilizar"} },
+    { t:"du", ty:"p" },
+    { t:"chou-fleur", pu:",", tr:"couve-flor" },
+    { t:"de la", ty:"p" },
+    { t:"courge", ty:"u", pu:",", tr:"abóbora / moranga" },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"oignon", tr:"cebola" },
+    { t:"et", tr:"e" },
+    { t:"des", ty:"p" },
+    { t:"épinards", tr:"espinafre / espinafres" },
+    { t:"frais", pu:".", tr:"fresco / natural" },
+    { t:"C'est", tr:"isso é / está", inf:{f:"être",p:"ser, estar"} },
+    { t:"parfait", tr:"perfeito" },
+    { t:"pour", tr:"para" },
+    { t:"la", tr:"a" },
+    { t:"santé", pu:".", tr:"saúde" }
+  ]
+},
+{
+  titleFr: "La salle de classe",
+  titlePt: "A sala de aula",
+  tokens: [
+    { t:"Dans", tr:"dentro de / em" },
+    { t:"la", tr:"a" },
+    { t:"salle", tr:"sala" },
+    { t:"de", tr:"de" },
+    { t:"classe", pu:",", tr:"aula / classe" },
+    { t:"l'", ns:true, tr:"o (abreviado)" },
+    { t:"enseignant", tr:"professor de crianças" },
+    { t:"montre", tr:"mostra / apresenta", inf:{f:"montrer",p:"mostrar, apresentar"} },
+    { t:"les", tr:"os / as" },
+    { t:"aliments", pu:".", tr:"alimentos" },
+    { t:"Il", tr:"ele" },
+    { t:"coupe", tr:"corta", inf:{f:"couper",p:"cortar"} },
+    { t:"du", ty:"p" },
+    { t:"concombre", ty:"u", pu:",", tr:"pepino" },
+    { t:"fait", tr:"faz", inf:{f:"faire",p:"fazer"} },
+    { t:"sentir", tr:"cheirar / sentir" },
+    { t:"de la", ty:"p" },
+    { t:"ciboulette", pu:",", tr:"cebolinha" },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"ail", tr:"alho" },
+    { t:"et", tr:"e" },
+    { t:"partage", tr:"compartilha / divide", inf:{f:"partager",p:"compartilhar, dividir"} },
+    { t:"des", ty:"p" },
+    { t:"mandarines", pu:".", tr:"tangerinas / mimosas" }
+  ]
+},
+{
+  titleFr: "Le repas au restaurant",
+  titlePt: "A refeição no restaurante",
+  tokens: [
+    { t:"Pendant", tr:"durante" },
+    { t:"les", tr:"as" },
+    { t:"vacances", tr:"férias" },
+    { t:"en", tr:"em / no(a)" },
+    { t:"France", pu:",", tr:"França" },
+    { t:"je", tr:"eu" },
+    { t:"commande", tr:"peço / encomendo", inf:{f:"commander",p:"pedir, encomendar"} },
+    { t:"du", ty:"p" },
+    { t:"maïs", tr:"milho" },
+    { t:"chaud", pu:",", tr:"quente" },
+    { t:"ma", tr:"minha" },
+    { t:"sœur", tr:"irmã" },
+    { t:"prend", tr:"pega", inf:{f:"prendre",p:"pegar"} },
+    { t:"de la", ty:"p" },
+    { t:"mangue", ty:"u", pu:",", tr:"manga" },
+    { t:"mon", tr:"meu" },
+    { t:"père", tr:"pai" },
+    { t:"veut", tr:"quer", inf:{f:"vouloir",p:"querer"} },
+    { t:"de l'", ty:"p", ns:true },
+    { t:"orange", tr:"laranja" },
+    { t:"et", tr:"e" },
+    { t:"nous", tr:"nós" },
+    { t:"partageons", tr:"compartilhamos / dividimos", inf:{f:"partager",p:"compartilhar, dividir"} },
+    { t:"des", ty:"p" },
+    { t:"pommes de terre", pu:".", tr:"batatas" }
+  ]
+},
+{
+  titleFr: "Un corps fort",
+  titlePt: "Um corpo forte",
+  tokens: [
+    { t:"Pour", tr:"para" },
+    { t:"avoir", tr:"ter" },
+    { t:"un", tr:"um" },
+    { t:"corps", tr:"corpo" },
+    { t:"fort", pu:",", tr:"forte" },
+    { t:"mon", tr:"meu" },
+    { t:"cousin", tr:"primo" },
+    { t:"choisit", tr:"escolhe", inf:{f:"choisir",p:"escolher"} },
+    { t:"du", ty:"p" },
+    { t:"brocoli", pu:",", tr:"brócolis" },
+    { t:"mange", tr:"come", inf:{f:"manger",p:"comer"} },
+    { t:"de la", ty:"p" },
+    { t:"pomme", ty:"u", pu:",", tr:"maçã" },
+    { t:"boit", tr:"bebe", inf:{f:"boire",p:"beber"} },
+    { t:"du", ty:"p" },
+    { t:"jus", tr:"suco" },
+    { t:"d'", ns:true, tr:"de" },
+    { t:"ananas", tr:"abacaxi" },
+    { t:"et", tr:"e" },
+    { t:"ajoute", tr:"adiciona / acrescenta", inf:{f:"ajouter",p:"adicionar, acrescentar"} },
+    { t:"des", ty:"p" },
+    { t:"petits pois", tr:"ervilhas" },
+    { t:"dans", tr:"em / dentro de" },
+    { t:"son", tr:"seu / dele" },
+    { t:"assiette", pu:".", tr:"prato" }
+  ]
+}
+];
+
+/* =========================================================
+   ESTADO GLOBAL
+   ========================================================= */
+const state = {
+  screen: 'home',            // home | game | galo | final
+  currentParagraph: 0,       // índice 0-9 do parágrafo atual
+  completedCount: 0,         // parágrafos concluídos (0-10)
+  yellowBank: 0,             // corações amarelos acumulados (disponíveis no início da rodada)
+  yellowSpentRound: 0,       // amarelos gastos na rodada atual
+  redSpentRound: 0,          // vermelhos gastos na rodada atual (de 4)
+  spentSinceCheckpoint: 0,   // corações gastos desde o último recado do Galo
+  popup: null,               // índice do token cujo pop-up está aberto (ou null)
+  galoInfo: null
+};
+
+const RED_PER_ROUND = 4;
+const TOTAL_MAX = 40; // 4 corações x 10 parágrafos
+
+function heartsAvailable(){
+  return (state.yellowBank - state.yellowSpentRound) + (RED_PER_ROUND - state.redSpentRound);
+}
+function spendHeart(){
+  const bankLeft = state.yellowBank - state.yellowSpentRound;
+  if(bankLeft > 0) state.yellowSpentRound++;
+  else state.redSpentRound++;
+  state.spentSinceCheckpoint++;
+}
+
+/* =========================================================
+   NAVEGAÇÃO / FLUXO DO JOGO
+   ========================================================= */
+function startGame(){
+  playSound('click');
+  state.screen='game';
+  state.currentParagraph=0;
+  state.completedCount=0;
+  state.yellowBank=0; state.yellowSpentRound=0; state.redSpentRound=0;
+  state.spentSinceCheckpoint=0; state.popup=null; state.galoInfo=null;
+  render();
+}
+
+function clickWord(i){
+  const tk = paragraphs[state.currentParagraph].tokens[i];
+  if(tk.ty==='p') return; // partitivo: sem clique
+
+  const isFree = tk.ty==='u';
+  if(!isFree && heartsAvailable()<=0){
+    playSound('falha');
+    return;
+  }
+
+  playSound('click');
+  if(!isFree){
+    spendHeart();
+    if(heartsAvailable()===0) playSound('falha');
+  }
+  state.popup = i;
+  render();
+}
+
+function closePopup(){
+  state.popup = null;
+  render();
+}
+
+function advance(){
+  playSound('click');
+  const remaining = heartsAvailable();
+  if(remaining>=2) playSound('ok');
+
+  state.yellowBank = remaining;
+  state.yellowSpentRound=0;
+  state.redSpentRound=0;
+  state.popup=null;
+  state.completedCount++;
+
+  if(state.completedCount % 2 === 0){
+    state.galoInfo = {
+      heartsNow: state.yellowBank,
+      passed: state.spentSinceCheckpoint <= 4,
+      isLast: state.completedCount === 10
+    };
+    state.spentSinceCheckpoint = 0;
+    state.screen = 'galo';
+    playSound(state.galoInfo.passed ? 'level' : 'levelfail');
+  } else {
+    state.currentParagraph = state.completedCount;
+    state.screen = 'game';
+  }
+  render();
+}
+
+function continueFromGalo(){
+  playSound('click');
+  if(state.galoInfo.isLast){
+    goFinal();
+  } else {
+    state.currentParagraph = state.completedCount;
+    state.screen = 'game';
+    render();
+  }
+}
+
+function goFinal(){
+  state.screen='final';
+  const pct = state.yellowBank / TOTAL_MAX;
+  playSound(pct > 0.6 ? 'win' : 'losing');
+  render();
+}
+
+function resetGame(){
+  playSound('click');
+  state.screen='home';
+  state.currentParagraph=0;
+  state.completedCount=0;
+  state.yellowBank=0; state.yellowSpentRound=0; state.redSpentRound=0;
+  state.spentSinceCheckpoint=0; state.popup=null; state.galoInfo=null;
+  render();
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function render(){
+  renderTopbar();
+  const content = document.getElementById('content');
+  if(state.screen==='home') content.innerHTML = homeTemplate();
+  else if(state.screen==='game') renderGame();
+  else if(state.screen==='galo') content.innerHTML = galoTemplate();
+  else if(state.screen==='final') content.innerHTML = finalTemplate();
+}
+
+function renderTopbar(){
+  const bar = document.getElementById('topbar');
+  let label = 'Pronto para praticar?';
+  let pct = 0;
+  if(state.screen==='game'){
+    label = `Parágrafo ${state.currentParagraph+1} / 10`;
+    pct = Math.round((state.completedCount/10)*100);
+  } else if(state.screen==='galo'){
+    label = 'Recado do Galo 🐓';
+    pct = Math.round((state.completedCount/10)*100);
+  } else if(state.screen==='final'){
+    label = 'Resultado final';
+    pct = 100;
+  }
+  bar.innerHTML = `
+    <div class="topbar-row">
+      <span class="level-label">Galolingo · ${label}</span>
+      <span class="score-badge">🏆 ${state.yellowBank}<span class="score-max">/${TOTAL_MAX}</span></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  `;
+}
+
+/* ---------- HOME ---------- */
+function homeTemplate(){
+  return `
+    <div class="home-card">
+      <div class="mascot">🐓</div>
+      <h1>Galolingo</h1>
+      <p class="home-sub">Leia 10 parágrafos em francês. Toque em qualquer palavra para ver a tradução — mas cuidado, cada toque custa 1 coração!</p>
+      <div class="rule-list">
+        <div class="rule-item"><span class="rule-icon">❤️</span> Você começa cada texto com 4 corações</div>
+        <div class="rule-item"><span class="rule-icon">💛</span> Corações que sobram viram amarelos e acumulam para o próximo texto</div>
+        <div class="rule-item"><span class="rule-icon">🥦</span> Palavras em <strong>negrito</strong> são artigos partitivos e não custam nada</div>
+        <div class="rule-item"><span class="rule-icon">🍇</span> A palavra <u>sublinhada</u> é uma dica grátis</div>
+        <div class="rule-item"><span class="rule-icon">🐓</span> O Galo dá um recado a cada 2 textos concluídos</div>
+      </div>
+    </div>
+    <div class="footer-space"></div>
+    <button class="btn btn-block" onclick="startGame()">Começar</button>
+  `;
+}
+
+/* ---------- JOGO (PARÁGRAFO) ---------- */
+function renderHearts(){
+  let html='';
+  for(let i=0;i<state.yellowBank;i++){
+    html += (i < state.yellowSpentRound)
+      ? '<span class="heart-empty"></span>'
+      : '<span class="heart">💛</span>';
+  }
+  for(let i=0;i<RED_PER_ROUND;i++){
+    html += (i < state.redSpentRound)
+      ? '<span class="heart-empty"></span>'
+      : '<span class="heart">❤️</span>';
+  }
+  return html;
+}
+
+function renderGame(){
+  const para = paragraphs[state.currentParagraph];
+  const blocked = heartsAvailable() <= 0;
+
+  const tokensHtml = para.tokens.map((tk,i)=>{
+    const spacer = (i>0 && !para.tokens[i-1].ns) ? ' ' : '';
+    if(tk.ty==='p'){
+      return `${spacer}<span class="w-partitive">${tk.t}</span>${tk.pu||''}`;
+    }
+    if(tk.ty==='u'){
+      return `${spacer}<span class="w-underline" data-tk="${i}" onclick="clickWord(${i})">${tk.t}</span>${tk.pu||''}`;
+    }
+    return `${spacer}<span class="w-word" data-tk="${i}" onclick="clickWord(${i})">${tk.t}</span>${tk.pu||''}`;
+  }).join('');
+
+  let popupHtml = '';
+  let overlayHtml = '';
+  if(state.popup !== null){
+    const tk = para.tokens[state.popup];
+    const infHtml = tk.inf ? `<div class="popup-inf">Infinitivo: <strong>${tk.inf.f}</strong> = ${tk.inf.p}</div>` : '';
+    const freeHtml = tk.ty==='u' ? `<div class="popup-free">💡 dica grátis</div>` : '';
+    popupHtml = `
+      <div class="popup" id="activePopup">
+        <div class="popup-word">${tk.t}</div>
+        <div class="popup-trans">${tk.tr}</div>
+        ${infHtml}
+        ${freeHtml}
+      </div>`;
+    overlayHtml = `<div class="popup-overlay" onclick="closePopup()"></div>`;
+  }
+
+  document.getElementById('content').innerHTML = `
+    <div class="question-card">
+      <p class="para-title">${para.titleFr}<span class="title-sep">/</span>${para.titlePt}</p>
+      <div class="hearts-row">${renderHearts()}</div>
+      ${blocked ? `<p class="blocked-msg">💤 Sem corações no momento! Toque em "Tradução já feita no caderno" para seguir em frente.</p>` : ''}
+      <div class="frtext ${blocked?'blocked':''}">
+        ${tokensHtml}
+        ${overlayHtml}
+        ${popupHtml}
+      </div>
+    </div>
+    <div class="footer-space"></div>
+    <button class="btn btn-block" onclick="advance()">Tradução já feita no caderno</button>
+  `;
+
+  if(state.popup !== null) requestAnimationFrame(positionPopup);
+}
+
+function positionPopup(){
+  const popupEl = document.getElementById('activePopup');
+  const container = document.querySelector('.frtext');
+  const wordEl = container ? container.querySelector(`[data-tk="${state.popup}"]`) : null;
+  if(!popupEl || !container || !wordEl) return;
+
+  const wordRect = wordEl.getBoundingClientRect();
+  const contRect = container.getBoundingClientRect();
+  const popupW = popupEl.offsetWidth;
+
+  let left = (wordRect.left - contRect.left) + (wordRect.width/2) - (popupW/2);
+  left = Math.max(0, Math.min(left, container.clientWidth - popupW));
+  const top = (wordRect.top - contRect.top) + wordRect.height + 8;
+
+  popupEl.style.left = left+'px';
+  popupEl.style.top = top+'px';
+}
+
+/* ---------- RECADO DO GALO ---------- */
+function galoTemplate(){
+  const g = state.galoInfo;
+  const mascot = g.passed ? '🐓😄' : '🐓😟';
+  const msg = g.passed
+    ? 'Muito bem! Você está preservando bem seus corações e lendo com atenção. Continue assim!'
+    : 'Ei, esse galo notou que você usou bastante o pop-up de tradução nos últimos textos. Tente ler a frase inteira antes de tocar nas palavras!';
+  return `
+    <div class="home-card">
+      <div class="mascot">${mascot}</div>
+      <h1>Recado do Galo</h1>
+      <p class="home-sub">Corações acumulados até agora:</p>
+      <p class="galo-hearts">💛 ${g.heartsNow}</p>
+      <p class="home-sub">${msg}</p>
+    </div>
+    <div class="footer-space"></div>
+    <button class="btn btn-block" onclick="continueFromGalo()">${g.isLast ? 'Ver resultado final' : 'Continuar'}</button>
+  `;
+}
+
+/* ---------- RESULTADO FINAL ---------- */
+function finalTemplate(){
+  const score = state.yellowBank;
+  const pct = score / TOTAL_MAX;
+  const passed = pct > 0.6;
+  const mascot = passed ? '🐓🥳' : '🐓😭';
+  const msg = passed
+    ? 'Parabéns! Esse galo está cantando de alegria — seu vocabulário está afiado! 🎉'
+    : 'Esse galo ficou um pouco triste... tente ler com mais calma antes de pedir ajuda na próxima tentativa! 💪';
+  return `
+    <div class="home-card">
+      <div class="mascot">${mascot}</div>
+      <h1>Resultado Final</h1>
+      <p class="final-score">${score}<span> / ${TOTAL_MAX}</span></p>
+      <p class="home-sub">${msg}</p>
+      <div class="breakdown">
+        <div class="breakdown-row"><span>Corações preservados</span><span>${score} / ${TOTAL_MAX}</span></div>
+        <div class="breakdown-row"><span>Aproveitamento</span><span>${Math.round(pct*100)}%</span></div>
+      </div>
+    </div>
+    <div class="footer-space"></div>
+    <button class="btn btn-block" onclick="resetGame()">Jogar Novamente</button>
+  `;
+}
+
+/* =========================================================
+   INICIALIZAÇÃO
+   ========================================================= */
+render();
+</script>
+</body>
+</html>
