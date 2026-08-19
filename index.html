@@ -366,139 +366,6 @@ function playSound(name){
 
 const paragraphs = [
 {
-  titleFr: "À la cantine de l'école",
-  titlePt: "Na cantina da escola",
-  tokens: [
-    { t:"À", tr:"a / em" },
-    { t:"la", tr:"a" },
-    { t:"cantine", pu:",", tr:"cantina / refeitório" },
-    { t:"Lucas", tr:"Lucas" },
-    { t:"mange", tr:"come", inf:{f:"manger",p:"comer"} },
-    { t:"avec", tr:"com" },
-    { t:"son", tr:"seu / dele" },
-    { t:"ami", pu:".", tr:"amigo" },
-    { t:"Dans", tr:"em / dentro de" },
-    { t:"son", tr:"seu / dele" },
-    { t:"assiette", pu:",", tr:"prato" },
-    { t:"il", tr:"ele" },
-    { t:"met", tr:"coloca / põe", inf:{f:"mettre",p:"colocar, pôr"} },
-    { t:"du", ty:"p" },
-    { t:"brocoli", pu:",", tr:"brócolis" },
-    { t:"de la", ty:"p" },
-    { t:"carotte", ty:"u", tr:"cenoura" },
-    { t:"avec", tr:"com" },
-    { t:"de l'", ty:"p", ns:true },
-    { t:"ail", pu:",", tr:"alho" },
-    { t:"et", tr:"e" },
-    { t:"des", ty:"p" },
-    { t:"petits pois", pu:".", tr:"ervilhas" },
-    { t:"Puis", pu:",", tr:"depois / em seguida" },
-    { t:"il", tr:"ele" },
-    { t:"va", tr:"vai", inf:{f:"aller",p:"ir"} },
-    { t:"dans", tr:"em" },
-    { t:"la", tr:"a" },
-    { t:"salle", tr:"sala" },
-    { t:"de", tr:"de" },
-    { t:"classe", pu:".", tr:"aula" }
-  ]
-},
-{
-  titleFr: "La cuisine en famille",
-  titlePt: "A cozinha em família",
-  tokens: [
-    { t:"Dans", tr:"dentro de / em" },
-    { t:"la", tr:"a" },
-    { t:"cuisine", pu:",", tr:"cozinha" },
-    { t:"maman", tr:"mamãe" },
-    { t:"prépare", tr:"prepara", inf:{f:"préparer",p:"preparar"} },
-    { t:"le", tr:"o" },
-    { t:"repas", pu:".", tr:"refeição / comida" },
-    { t:"Elle", tr:"ela" },
-    { t:"coupe", tr:"corta", inf:{f:"couper",p:"cortar"} },
-    { t:"du", ty:"p" },
-    { t:"persil", tr:"salsinha" },
-    { t:"et", tr:"e" },
-    { t:"de la", ty:"p" },
-    { t:"tomate", ty:"u", pu:".", tr:"tomate" },
-    { t:"Mon", tr:"meu" },
-    { t:"frère", tr:"irmão" },
-    { t:"ajoute", tr:"adiciona / acrescenta", inf:{f:"ajouter",p:"adicionar, acrescentar"} },
-    { t:"de l'", ty:"p", ns:true },
-    { t:"oignon", tr:"cebola" },
-    { t:"et", tr:"e" },
-    { t:"des", ty:"p" },
-    { t:"pommes de terre", tr:"batatas" },
-    { t:"pour", tr:"para" },
-    { t:"la", tr:"a" },
-    { t:"famille", pu:".", tr:"família" }
-  ]
-},
-{
-  titleFr: "Le petit-déjeuner du matin",
-  titlePt: "O café da manhã",
-  tokens: [
-    { t:"Le", tr:"o / de" },
-    { t:"matin", pu:",", tr:"manhã" },
-    { t:"j'", ns:true, tr:"eu (abreviado)" },
-    { t:"adore", tr:"adoro", inf:{f:"adorer",p:"adorar"} },
-    { t:"le", tr:"o" },
-    { t:"petit-déjeuner", pu:".", tr:"café da manhã" },
-    { t:"Je", tr:"eu" },
-    { t:"bois", tr:"bebo", inf:{f:"boire",p:"beber"} },
-    { t:"du", ty:"p" },
-    { t:"jus", tr:"suco" },
-    { t:"d'", ns:true, tr:"de (abreviado)" },
-    { t:"orange", tr:"laranja" },
-    { t:"et", tr:"e" },
-    { t:"je", tr:"eu" },
-    { t:"mange", tr:"como", inf:{f:"manger",p:"comer"} },
-    { t:"de la", ty:"p" },
-    { t:"papaye", ty:"u", pu:".", tr:"mamão" },
-    { t:"Ma", tr:"minha" },
-    { t:"sœur", tr:"irmã" },
-    { t:"préfère", tr:"prefere", inf:{f:"préférer",p:"preferir"} },
-    { t:"de l'", ty:"p", ns:true },
-    { t:"ananas", tr:"abacaxi" },
-    { t:"et", tr:"e" },
-    { t:"des", ty:"p" },
-    { t:"fraises", tr:"morangos" },
-    { t:"magnifiques", pu:".", tr:"magníficos" }
-  ]
-},
-{
-  titleFr: "Un pique-nique à la plage",
-  titlePt: "Um piquenique na praia",
-  tokens: [
-    { t:"Pendant", tr:"durante" },
-    { t:"l'", ns:true, tr:"o (abreviado)" },
-    { t:"été", pu:",", tr:"verão" },
-    { t:"nous", tr:"nós" },
-    { t:"allons", tr:"vamos", inf:{f:"aller",p:"ir"} },
-    { t:"à", tr:"à / para" },
-    { t:"la", tr:"a" },
-    { t:"plage", pu:".", tr:"praia" },
-    { t:"Sous", tr:"sob / debaixo de" },
-    { t:"le", tr:"o" },
-    { t:"soleil", pu:",", tr:"sol" },
-    { t:"nous", tr:"nós" },
-    { t:"mangeons", tr:"comemos", inf:{f:"manger",p:"comer"} },
-    { t:"du", ty:"p" },
-    { t:"citron", pu:",", tr:"limão" },
-    { t:"de la", ty:"p" },
-    { t:"pastèque", ty:"u", pu:",", tr:"melancia" },
-    { t:"de l'", ty:"p", ns:true },
-    { t:"orange", tr:"laranja" },
-    { t:"et", tr:"e" },
-    { t:"des", ty:"p" },
-    { t:"raisins", tr:"uvas" },
-    { t:"très", tr:"muito" },
-    { t:"doux", tr:"doces / suaves" },
-    { t:"avec", tr:"com" },
-    { t:"nos", tr:"nos / nossos(as)" },
-    { t:"cousins", pu:".", tr:"primos" }
-  ]
-},
-{
   titleFr: "Le village du grand-père",
   titlePt: "O vilarejo do vovô",
   tokens: [
@@ -697,7 +564,7 @@ const state = {
 };
 
 const RED_PER_ROUND = 4;
-const TOTAL_MAX = 40; // 4 corações x 10 parágrafos
+const TOTAL_MAX = paragraphs.length * RED_PER_ROUND; // 4 corações x 6 parágrafos = 24
 
 function heartsAvailable(){
   return (state.yellowBank - state.yellowSpentRound) + (RED_PER_ROUND - state.redSpentRound);
@@ -761,7 +628,7 @@ function advance(){
     state.galoInfo = {
       heartsNow: state.yellowBank,
       passed: state.spentSinceCheckpoint <= 4,
-      isLast: state.completedCount === 10
+      isLast: state.completedCount === paragraphs.length
     };
     state.spentSinceCheckpoint = 0;
     state.screen = 'galo';
@@ -818,11 +685,11 @@ function renderTopbar(){
   let label = 'Pronto para praticar?';
   let pct = 0;
   if(state.screen==='game'){
-    label = `Parágrafo ${state.currentParagraph+1} / 10`;
-    pct = Math.round((state.completedCount/10)*100);
+    label = `Parágrafo ${state.currentParagraph+1} / ${paragraphs.length}`;
+    pct = Math.round((state.completedCount/paragraphs.length)*100);
   } else if(state.screen==='galo'){
     label = 'Recado do Galo 🐓';
-    pct = Math.round((state.completedCount/10)*100);
+    pct = Math.round((state.completedCount/paragraphs.length)*100);
   } else if(state.screen==='final'){
     label = 'Resultado final';
     pct = 100;
@@ -842,7 +709,7 @@ function homeTemplate(){
     <div class="home-card">
       <div class="mascot">🐓</div>
       <h1>Galolingo</h1>
-      <p class="home-sub">Leia 10 parágrafos em francês. Toque em qualquer palavra para ver a tradução — mas cuidado, cada toque custa 1 coração!</p>
+      <p class="home-sub">Leia ${paragraphs.length} parágrafos em francês. Toque em qualquer palavra para ver a tradução — mas cuidado, cada toque custa 1 coração!</p>
       <div class="rule-list">
         <div class="rule-item"><span class="rule-icon">❤️</span> Você começa cada texto com 4 corações</div>
         <div class="rule-item"><span class="rule-icon">💛</span> Corações que sobram viram amarelos e acumulam para o próximo texto</div>
